@@ -1,0 +1,14 @@
+@import "tailwindcss";
+
+@theme {
+  --color-cosmic-900: #030305;
+  --color-cosmic-800: #0c0d14;
+  --color-cosmic-500: #3a3f5c;
+}
+
+@layer base {
+  body {
+    background-color: var(--color-cosmic-900);
+    color: #f1f5f9;
+  }
+}
