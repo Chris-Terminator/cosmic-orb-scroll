@@ -74,7 +74,7 @@ const EarthSurface = ({ earthRef }: { earthRef: React.RefObject<THREE.Mesh | nul
     uniforms.uBounceIntensity.value = Math.pow(proximity, 2.0) * 0.25;
   });
 
-  const onBeforeCompile = useMemo(() => (shader: THREE.Shader) => {
+  const onBeforeCompile = useMemo(() => (shader: THREE.WebGLProgramParametersWithUniforms) => {
     shader.uniforms.uBounceIntensity = uniforms.uBounceIntensity;
     shader.uniforms.uBounceColor = uniforms.uBounceColor;
     
@@ -145,7 +145,7 @@ const EarthClouds = ({ cloudRef }: { cloudRef: React.RefObject<THREE.Mesh | null
     uniforms.uBounceIntensity.value = Math.pow(proximity, 2.0) * 0.15;
   });
 
-  const onBeforeCompile = useMemo(() => (shader: THREE.Shader) => {
+  const onBeforeCompile = useMemo(() => (shader: THREE.WebGLProgramParametersWithUniforms) => {
     shader.uniforms.uBounceIntensity = uniforms.uBounceIntensity;
     shader.uniforms.uBounceColor = uniforms.uBounceColor;
     
