@@ -4,52 +4,52 @@ import * as THREE from 'three';
 import { useScrollStore } from '../animation/scrollStore';
 
 const LightingRig = () => {
-  const blueLightRef = useRef<THREE.PointLight>(null);
-  const spotLightRef = useRef<THREE.SpotLight>(null);
+  const bottomGlowLightRef = useRef<THREE.PointLight>(null);
+  const sunLightRef = useRef<THREE.DirectionalLight>(null);
 
   useFrame(() => {
     const progress = useScrollStore.getState().progress;
-    
-    // Animate lighting based on scroll position to emphasize the "landing"
-    if (spotLightRef.current) {
-      // Spotlight comes from above, intensity increases as we land
-      spotLightRef.current.intensity = 5 + progress * 15;
-      spotLightRef.current.position.set(0, 10 - progress * 5, 2);
+
+    if (bottomGlowLightRef.current) {
+      // Start much sooner (progress > 0.2 instead of 0.4)
+      const proximity = Math.max(0, (progress - 0.2) / 0.8);
+      // Smoother, earlier ease (power 2 instead of 3)
+      const eased = Math.pow(proximity, 2);
+      bottomGlowLightRef.current.intensity = eased * 40.0;
+      bottomGlowLightRef.current.position.set(0, -6, 2); 
     }
 
-    if (blueLightRef.current) {
-      // Side rim light
-      blueLightRef.current.intensity = 2 + progress * 5;
+    if (sunLightRef.current) {
+      sunLightRef.current.position.x = 5 + Math.sin(progress * Math.PI) * 2;
     }
   });
 
   return (
     <group>
-      <ambientLight intensity={0.2} color="#ffffff" />
-      
-      <pointLight 
-        ref={blueLightRef}
-        position={[-5, 2, -2]} 
-        color="#4c8dff" 
-        intensity={2} 
-        distance={20}
-      />
-      
-      <pointLight 
-        position={[5, -2, -2]} 
-        color="#ff4c8d" 
-        intensity={1.5} 
-        distance={20}
+      <ambientLight intensity={0.05} color="#0b1026" />
+
+      <directionalLight
+        ref={sunLightRef}
+        position={[10, 8, 5]}
+        color="#fff5e6"
+        intensity={4.5}
+        castShadow
+        shadow-mapSize={[2048, 2048]}
       />
 
-      <spotLight
-        ref={spotLightRef}
-        position={[0, 10, 0]}
-        angle={0.5}
-        penumbra={0.5}
-        color="#ffffff"
-        intensity={5}
-        castShadow
+      <directionalLight
+        position={[-10, -5, -5]}
+        color="#3a5a80"
+        intensity={0.6}
+      />
+
+      <pointLight
+        ref={bottomGlowLightRef}
+        position={[0, -6, 2]}
+        color="#ffcc88"
+        intensity={0}
+        distance={20}
+        decay={2.5}
       />
     </group>
   );
